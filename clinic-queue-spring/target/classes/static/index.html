@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Queue Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">Clinic Queue</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="queue.html">View Queue</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-7 col-xl-6">
+                    <div class="card shadow-card">
+                        <div class="card-body p-4 p-md-5">
+                            <h1 class="card-title mb-4">Generate Token</h1>
+                            <p class="text-muted mb-4">Enter patient name to generate a queue token.</p>
+                            <form id="tokenForm">
+                                <div class="mb-4">
+                                    <label for="patientName" class="form-label fw-semibold">Patient Name</label>
+                                    <input type="text" class="form-control form-control-lg" id="patientName" name="patientName" required placeholder="Enter patient name">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                    Generate Token
+                                </button>
+                            </form>
+                            <div id="message" class="message mt-4" role="alert"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('tokenForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('patientName').value.trim();
+            const msgEl = document.getElementById('message');
+            msgEl.textContent = '';
+            msgEl.className = 'mt-4';
+            if (!name) return;
+            try {
+                const res = await fetch('/addPatient', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    msgEl.textContent = 'Your Token Number is ' + data.tokenNumber;
+                    msgEl.className = 'alert alert-success mt-4';
+                    document.getElementById('patientName').value = '';
+                } else {
+                    msgEl.textContent = data.error || 'Failed to add patient';
+                    msgEl.className = 'alert alert-danger mt-4';
+                }
+            } catch (err) {
+                msgEl.textContent = 'Network error. Is the server running?';
+                msgEl.className = 'alert alert-danger mt-4';
+            }
+        });
+    </script>
+</body>
+</html>

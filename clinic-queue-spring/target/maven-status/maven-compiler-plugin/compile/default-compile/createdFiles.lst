@@ -1,0 +1,4 @@
+com\clinicqueue\service\QueueService.class
+com\clinicqueue\controller\QueueController.class
+com\clinicqueue\model\Patient.class
+com\clinicqueue\ClinicQueueApplication.class

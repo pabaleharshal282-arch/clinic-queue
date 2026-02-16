@@ -1,0 +1,12 @@
+# Render.com - One-click deploy
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: hospital-mgmt-api
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # PORT is auto-set by Render
